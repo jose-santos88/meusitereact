@@ -1,14 +1,43 @@
-import Header from "./components/Header"
+import { useState } from "react"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Home from "./pages/Home"
+import Pedidos from "./pages/Pedidos"
+import Novo from "./pages/Novo"
+import Sobre from "./pages/Sobre"
+import Erro404 from "./pages/Erro404"
+import Login from "./pages/Login"
 import Principal from "./components/Principal"
-import Footer from "./components/Footer"
 
 export default function App() {
+  const [logado, setLogado] = useState(false);
+
+  function handleLogin() {
+    setLogado(true);
+  }
+
+  function handleLogout() {
+    setLogado(false);
+  }
   return (
-    <>
-    <Header/>
-    <Principal/>
-    <Footer/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {logado ?
+          <>
+            <Route path="/" element={<Principal onLogout={handleLogout} />} >
+              <Route path="home" element={<Home />} />
+              <Route path="pedidos" element={<Pedidos />} />
+              <Route path="novo" element={<Novo />} />
+              <Route path="sobre" element={<Sobre />} />
+            </Route>
+          </>
+          :
+
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        }
+        <Route path="*" element={<Erro404 />} />
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 
